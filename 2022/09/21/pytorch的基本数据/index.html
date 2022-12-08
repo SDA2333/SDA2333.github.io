@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+        <title>Pytorch的基本数据tensor | SDA的网站</title>
+        <meta name="author" content="SDA">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <script src="/js/pixi.min.js"></script>
+        <div id="L2dCanvas"></div>
+        <script src="/js/live2d.min.js"></script>
+        <script src="/css/live2d.css"></script>
+        <script>
+            var v = new Viewer({
+                width: 240,
+                height: 325,
+                right: "0",
+                bottom: "0",
+                basePath: "/model",
+                role: "live2d",
+                mobile: true,
+            });
+        </script>
+        <div id="cursor"></div>
+        <script src="/css/cursor.css"></script>
+        <script src="/js/cursor.min.js"></script>
+        <canvas
+            id="background"
+            style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:-1"
+        ></canvas>
+        <script src="/js/background.min.js"></script>
+        <script src="/js/anime.min.js"></script>
+        <canvas
+            id="fireworks"
+            style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:32767"
+        ></canvas>
+        <script src="/js/firework2.js"></script>
+        <link rel="icon" href="/avatar1.jpg">
+        <script src="https://cdn.staticfile.org/instant.page/5.1.0/instantpage.min.js" type="module"></script>
+        <script src="https://cdn.staticfile.org/font-awesome/6.2.0/js/all.min.js"></script>
+        
+        <link rel="stylesheet" href="/css/test/fonts.min.css">
+        <link rel="stylesheet" href="/css/test/particlex.css">
+        
+        <script src="https://cdn.staticfile.org/vue/3.2.33/vue.global.prod.min.js"></script>
+    <meta name="generator" content="Hexo 6.3.0"></head>
+    <body>
+        <div id="loading" style="height:100vh;width:100vw;position:fixed;display:flex;z-index:200;justify-content:space-between;background:#fff;transition:opacity 0.3s ease-out"><div style="position:fixed;height:100vh;width:100vw;display:flex;justify-content:center;align-items:center"><div id="loadcontent" style="width:50vmin;height:50vmin;padding:50px;border-radius:50%;display:flex;justify-content:center;align-items:center;border:solid 10px #a3ddfb;text-align:center"><div><h2>LOADING...</h2><p style="word-break:keep-all">加载过慢请开启缓存(浏览器默认开启)</p><div><img alt="loading" src="/loading.gif"></div></div></div></div></div>
+        <div id="layout">
+            <i data-fa-symbol="calendar-solid" class="fa-solid fa-calendar fa-fw"></i>
+            <i data-fa-symbol="bookmark-solid" class="fa-solid fa-bookmark fa-fw"></i>
+            <i data-fa-symbol="tags-solid" class="fa-solid fa-tags fa-fw"></i>
+            <transition name="into">
+                <div v-show="show_page" style="display: -not-none">
+                    <div id="menu_show">
+                         
+<nav id="menu">
+    <div class="desktop-menu">
+        <a href="/">
+            <span class="title">SDA的网站</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;主页</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;归档</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;类别</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </div>
+    <div :class="'phone-menu ' + menu_show" id="phone-menu">
+        <div class="curtain" @click="menu_show = !menu_show" v-show="menu_show"></div>
+        <div :class="'title'" @click="menu_show = !menu_show">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;SDA的网站</span>
+        </div>
+        <transition name="slide">
+        <div class="items" v-show="menu_show">
+            
+            <a href="/">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-house fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">主页</div>
+                </div>
+            </a>
+            
+            <a href="/about">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-id-card fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">关于</div>
+                </div>
+            </a>
+            
+            <a href="/archives">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-box-archive fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">归档</div>
+                </div>
+            </a>
+            
+            <a href="/categories">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-bookmark fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">类别</div>
+                </div>
+            </a>
+            
+            <a href="/tags">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-tags fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                </div>
+            </a>
+            
+        </div>
+        </transition>
+    </div>
+</nav>
+                    </div>
+                    <div id="main">
+                        
+<div class="article">
+    <div>
+        <h1>Pytorch的基本数据tensor </h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <svg class="fa-icon"><use xlink:href="#calendar-solid"></use></svg>
+            </span>
+            2022/9/21
+        </span>
+        
+        <span class="category">
+            <a href="/categories/deep-learning/">
+                <span class="icon">
+                    <svg class="fa-icon"><use xlink:href="#bookmark-solid"></use></svg>
+                </span>
+                deep learning
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/Pytorch/" style="color: #ffa2c4">
+                    Pytorch
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    <div class="content" v-pre>
+        <h1 id="pytorch的基本数据tensor"><a href="#pytorch的基本数据tensor" class="headerlink" title="pytorch的基本数据tensor"></a>pytorch的基本数据tensor</h1><p>Tensor，即张量，是PyTorch中的基本操作对象，可以看做是包含单一数据类型元素的多维矩阵。从使用角度来看，Tensor与NumPy的ndarrays非常类似，相互之间也可以自由转换，只不过Tensor还支持GPU的加速。</p>
+<img src="https://tva1.sinaimg.cn/large/008vxvgGgy1h80j83i5zrj314s0eddk9.jpg" alt="85d160a859334f14bebdcc8c21eff18e  " style="zoom:50%;" />
+
+<img src="https://tva1.sinaimg.cn/large/008vxvgGgy1h80j8tbe1vj30rn0kqgn9.jpg" alt="9e2b11f3791a432eaf86169f5446bcf2 " style="zoom:50%;" />
+
+<h2 id="torch-FloatTensor"><a href="#torch-FloatTensor" class="headerlink" title="torch.FloatTensor"></a>torch.FloatTensor</h2><p>torch.FloatTensor用于生成数据类型为浮点型的Tensor，传递给torch.FloatTensor的参数可以是列表，也可以是一个维度值。</p>
+<pre><code class="python">import torch
+a = torch.FloatTensor(2,3)
+b = torch.FloatTensor([2,3,4,5])
+a,b
+</code></pre>
+<p>得到的结果是：</p>
+<pre><code class="python">(tensor([[1.0561e-38, 1.0102e-38, 9.6429e-39],
+         [8.4490e-39, 9.6429e-39, 9.1837e-39]]),
+ tensor([2., 3., 4., 5.]))
+</code></pre>
+<h2 id="torch-IntTensor"><a href="#torch-IntTensor" class="headerlink" title="torch.IntTensor"></a>torch.IntTensor</h2><p>torch.IntTensor用于生成数据类型为整型的Tensor,传递给传递给torch.IntTensor的参数可以是列表，也可以是一个维度值。</p>
+<pre><code>import torch
+a = torch.FloatTensor(2,3)
+b = torch.FloatTensor([2,3,4,5])
+a,b
+</code></pre>
+<pre><code>import torch
+a = torch.rand(2,3)
+a 
+</code></pre>
+<p>得到：</p>
+<pre><code>tensor([[0.5625, 0.5815, 0.8221],
+        [0.3589, 0.4180, 0.2158]])
+</code></pre>
+<h2 id="torch-randn"><a href="#torch-randn" class="headerlink" title="torch.randn"></a>torch.randn</h2><p>用于生成数据类型为浮点数且维度指定的随机Tensor，和在numpy中使用的numpy.randn生成的随机数的方法类似，随机生成的浮点数的取值满足均值为0，方差为1的正态分布。</p>
+<pre><code>import torch
+a = torch.randn(2,3)
+a 
+</code></pre>
+<p>得到：</p>
+<pre><code>tensor([[-0.0067, -0.0707, -0.6682],
+        [ 0.8141,  1.1436,  0.5963]])
+</code></pre>
+<h2 id="torch-range"><a href="#torch-range" class="headerlink" title="torch.range"></a>torch.range</h2><p>torch.range用于生成数据类型为浮点型且起始范围和结束范围的Tensor，所以传递给torch.range的参数有三个，分别为起始值，结束值，步长，其中步长用于指定从起始值到结束值得每步的数据间隔。</p>
+<p>import torch<br>a &#x3D; torch.range(1,20,2)<br>a<br>1<br>2<br>3<br>得到：</p>
+<pre><code>tensor([ 1.,  3.,  5.,  7.,  9., 11., 13., 15., 17., 19.])
+</code></pre>
+<h2 id="torch-zeros-x2F-ones-x2F-empty"><a href="#torch-zeros-x2F-ones-x2F-empty" class="headerlink" title="torch.zeros&#x2F;ones&#x2F;empty"></a>torch.zeros&#x2F;ones&#x2F;empty</h2><p>torch.zeros用于生成数据类型为浮点型且维度指定的Tensor，不过这个浮点型的Tensor中的元素值全部为0。</p>
+<p>torch.ones生成全1的数组。</p>
+<p>torch.empty创建一个未被初始化数值的tensor,tensor的大小是由size确定,size: 定义tensor的shape ，这里可以是一个list 也可以是一个tuple</p>
+<pre><code>import torch
+a = torch.zeros(2,3)
+a
+</code></pre>
+<p>得到：</p>
+<pre><code>tensor([[0., 0., 0.],
+        [0., 0., 0.]])
+</code></pre>
+
+    </div>
+    
+    
+    <link rel="stylesheet" href="https://cdn.staticfile.org/waline/2.9.1/waline.min.css" />
+    <div id="comment">
+        <div id="waline-container"></div>
+    </div>
+    
+</div>
+                         
+<footer id="footer">
+    <div class="footer-wrap">
+        <div>
+            © 20xx - 2022 SDA的网站
+            <span class="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            @SDA
+        </div>
+        <div></div>
+        <div>Based on the <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo Engine</a> & <a
+                target="_blank" rel="noopener" href="https://github.com/argvchs/hexo-theme-particlex">ParticleX Theme</a></div>
+        
+    </div>
+</footer>
+                    </div>
+                </div>
+            </transition>
+            <div id="img_show">
+                <img id="img_content" alt="img_show">
+            </div>
+        </div>
+        <script src="https://cdn.staticfile.org/highlight.js/11.5.1/highlight.min.js"></script>
+        <script src="/js/particlex.js"></script>
+        <script src="/js/showimg.js"></script>
+        
+
+<script src="https://cdn.staticfile.org/waline/2.9.1/waline.min.js"></script>
+<script>
+    Waline.init({
+        el: '#waline-container',
+        serverURL: "https://blog-mac-comment.vercel.app",
+        commentCount: true,
+        pageview: false,
+        emoji: "https://unpkg.com/@waline/emojis@1.0.1/weibo,https://unpkg.com/@waline/emojis@1.0.1/alus,https://unpkg.com/@waline/emojis@1.0.1/bilibili,https://unpkg.com/@waline/emojis@1.0.1/qq,https://unpkg.com/@waline/emojis@1.0.1/tieba,https://unpkg.com/@waline/emojis@1.0.1/tw-emoji".split(','),
+        meta: "nick,mail,link".split(','),
+        requiredMeta: "nick".split(','),
+        lang: "zh-CN",
+        wordLimit: parseInt("0"),
+        pageSize: "10",
+        login: "enable",
+        locale: {}
+    });
+</script>
+
+    </body>
+</html>

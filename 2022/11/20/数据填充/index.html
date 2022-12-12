@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
-        <title>Pytorch的基本数据tensor | SDA的网站</title>
+        <title>数据填充 | SDA的网站</title>
         <meta name="author" content="SDA">
         <meta name="description" content="">
         <meta name="keywords" content="">
@@ -151,14 +151,14 @@
                         
 <div class="article">
     <div>
-        <h1>Pytorch的基本数据tensor </h1>
+        <h1>数据填充 </h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <svg class="fa-icon"><use xlink:href="#calendar-solid"></use></svg>
             </span>
-            2022/9/21
+            2022/11/20
         </span>
         
         <span class="category">
@@ -178,8 +178,8 @@
             
             <span class="tag">
                 
-                <a href="/tags/Pytorch/" style="color: #00bcd4">
-                    Pytorch
+                <a href="/tags/pandas数据预处理/" style="color: #00a596">
+                    pandas数据预处理
                 </a>
             </span>
             
@@ -187,62 +187,159 @@
         
     </div>
     <div class="content" v-pre>
-        <h1 id="pytorch的基本数据tensor"><a href="#pytorch的基本数据tensor" class="headerlink" title="pytorch的基本数据tensor"></a>pytorch的基本数据tensor</h1><span id="more"></span>
+        <h1 id="数据填充"><a href="#数据填充" class="headerlink" title="数据填充"></a>数据填充</h1><span id="more"></span>
+<p><strong>示例数据</strong><br>本文所使用的示例数据创建如下：</p>
+<pre><code class="python">import pandas as pd
+import numpy as np
 
-<p>Tensor，即张量，是PyTorch中的基本操作对象，可以看做是包含单一数据类型元素的多维矩阵。从使用角度来看，Tensor与NumPy的ndarrays非常类似，相互之间也可以自由转换，只不过Tensor还支持GPU的加速。</p>
-<img src="https://tva1.sinaimg.cn/large/008vxvgGgy1h80j83i5zrj314s0eddk9.jpg" alt="85d160a859334f14bebdcc8c21eff18e  " style="zoom:50%;" />
+data = pd.DataFrame(&#123;
+    &#39;name&#39;: [&#39;Bob&#39;, &#39;Mary&#39;, &#39;Peter&#39;, np.nan, &#39;Lucy&#39;],
+    &#39;score&#39;: [99, 100, np.nan, 91, 95],
+    &#39;class&#39;: [&#39;class1&#39;, &#39;class2&#39;, &#39;class1&#39;, &#39;class2&#39;, np.nan],
+    &#39;sex&#39;: [&#39;male&#39;, &#39;fmale&#39;, &#39;male&#39;, &#39;male&#39;, &#39;fmale&#39;],
+    &#39;age&#39;: [23, 25, 20, 19, 24]
+&#125;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/f0833b1b1dac45929ebe50fb140609aa.png" alt="在这里插入图片描述"></p>
+<h2 id="一、均值填充"><a href="#一、均值填充" class="headerlink" title="一、均值填充"></a>一、均值填充</h2><ul>
+<li>适用数据类型：数值类型</li>
+<li>适用场景：数据整体极值差异不大时</li>
+<li>举例：对成年男性身高的缺失值进行填充</li>
+<li>代码示例：对<code>data</code>数据中的<code>score</code>进行均值填充</li>
+</ul>
+<pre><code class="python">data[&#39;score&#39;].fillna(data[&#39;score&#39;].mean())
+</code></pre>
+<pre><code class="python"># 结果如下
+0     99.00
+1    100.00
+2     96.25
+3     91.00
+4     95.00
+</code></pre>
+<h2 id="二、中位数填充"><a href="#二、中位数填充" class="headerlink" title="二、中位数填充"></a>二、中位数填充</h2><ul>
+<li>适用数据类型：数值类型</li>
+<li>适用场景：数据整体极值差异较大时</li>
+<li>举例：对人均收入进行填充（数据中含有高收入人群：如马总）</li>
+<li>代码示例：对<code>data</code>数据中的<code>score</code>进行中位数填充</li>
+</ul>
+<pre><code class="python">data[&#39;score&#39;].fillna(data[&#39;score&#39;].median())
+</code></pre>
+<pre><code class="python"># 结果如下
+0     99.0
+1    100.0
+2     97.0
+3     91.0
+4     95.0
+</code></pre>
+<h2 id="三、众数填充"><a href="#三、众数填充" class="headerlink" title="三、众数填充"></a>三、众数填充</h2><ul>
+<li>适用数据类型：字符类型｜没有大小关系的数值类型数据</li>
+<li>适用场景：大多数情况下</li>
+<li>举例：对城市信息的缺失进行填充&#x2F;对工人车间编号进行填充</li>
+<li>代码示例：对<code>data</code>数据中的<code>class</code>进行众数填充（注意：众数填充时要通过索引0进行取值，一组数据的众数可能有多个，索引为0的数据一定会存在）</li>
+</ul>
+<pre><code class="python">data[&#39;class&#39;].fillna(data[&#39;class&#39;].mode()[0])
+</code></pre>
+<pre><code class="python"># 结果如下
+0    class1
+1    class2
+2    class1
+3    class2
+4    class1
+</code></pre>
+<h2 id="四、前后数据填充"><a href="#四、前后数据填充" class="headerlink" title="四、前后数据填充"></a>四、前后数据填充</h2><ul>
+<li>适用数据类型：数值类型｜字符类型</li>
+<li>适用场景：数据行与行之间具有前后关系时</li>
+<li>举例：学年成绩排行中的某同学某科目成绩丢失</li>
+<li>代码示例：对<code>data</code>数据中的<code>score</code>进行前后数据填充</li>
+</ul>
+<pre><code class="python"># 前文填充
+data[&#39;score&#39;].fillna(method=&#39;pad&#39;)
+# 后文填充
+data[&#39;score&#39;].fillna(method=&#39;bfill&#39;)
+</code></pre>
+<pre><code class="python"># 前文填充结果
+0     99.0
+1    100.0
+2    100.0
+3     91.0
+4     95.0
+# 后文填充结果
+0     99.0
+1    100.0
+2     91.0
+3     91.0
+4     95.0
+</code></pre>
+<h2 id="五、自定义数据填充"><a href="#五、自定义数据填充" class="headerlink" title="五、自定义数据填充"></a>五、自定义数据填充</h2><ul>
+<li>适用数据类型：数值类型｜字符类型</li>
+<li>适用场景：业务规定外的数据</li>
+<li>举例：某调查问卷对婚后幸福程度进行调查，到那时很多人是未婚，可以自定义内容表示未婚人群</li>
+<li>代码示例：对<code>data</code>数据中的<code>name</code>进行自定义数据填充</li>
+</ul>
+<pre><code class="python">data[&#39;name&#39;].fillna(&#39;no_name&#39;)
+</code></pre>
+<pre><code class="python"># 结果如下
+0        Bob
+1       Mary
+2      Peter
+3    no_name
+4       Lucy
+</code></pre>
+<h2 id="六、Pandas插值填充"><a href="#六、Pandas插值填充" class="headerlink" title="六、Pandas插值填充"></a>六、Pandas插值填充</h2><ul>
+<li>适用数据类型：数值类型</li>
+<li>适用场景：数据列的含义较为复杂，需要更精确的填充方法时</li>
+<li>举例：对所有带有<code>nan</code>的数值列<code>dataframe</code>进行填充</li>
+<li>说明：<code>pandas</code>中进行空值填充的方法为<code>interpolate()</code>，该方法的本质是使用各种数学（统计学）中的插值方法进行填充，其中包含最近邻插值法、阶梯插值、线性插值、B样条曲线插值等多种方法。</li>
+<li>参数说明：<a target="_blank" rel="noopener" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.interpolate.html">interpolate()参数介绍</a></li>
+<li>代码示例：</li>
+</ul>
+<pre><code class="python">data[&#39;score&#39;].interpolate()
+</code></pre>
+<pre><code class="python"># 结果如下
+0     99.0
+1    100.0
+2     95.5
+3     91.0
+4     95.0
+</code></pre>
+<h2 id="七、机器学习算法填充"><a href="#七、机器学习算法填充" class="headerlink" title="七、机器学习算法填充"></a>七、机器学习算法填充</h2><ul>
+<li>适用数据类型：数值类型｜字符类型</li>
+<li>适用场景：具有多种数据维度的场景</li>
+<li>说明：可以选择不同的回归｜分类模型对数据进行填充</li>
+<li>注意：下面的例子中不考虑具体场景，只是用于举例</li>
+<li>数值类型数据填充代码示例（线性回归）：</li>
+</ul>
+<pre><code class="python">from sklearn.linear_model import LinearRegression
 
-<img src="https://tva1.sinaimg.cn/large/008vxvgGgy1h80j8tbe1vj30rn0kqgn9.jpg" alt="9e2b11f3791a432eaf86169f5446bcf2 " style="zoom:50%;" />
+# 获取数据
+data_train = data.iloc[[0, 1, 3]]
 
-<h2 id="torch-FloatTensor"><a href="#torch-FloatTensor" class="headerlink" title="torch.FloatTensor"></a>torch.FloatTensor</h2><p>torch.FloatTensor用于生成数据类型为浮点型的Tensor，传递给torch.FloatTensor的参数可以是列表，也可以是一个维度值。</p>
-<pre><code class="python">import torch
-a = torch.FloatTensor(2,3)
-b = torch.FloatTensor([2,3,4,5])
-a,b
+data_train_x = data_train[[&#39;age&#39;]]
+data_train_y = data_train[&#39;score&#39;]
+# 使用线性回归进行拟合
+clf = LinearRegression()
+clf.fit(data_train_x, data_train_y)
+# 使用预测结果进行填充
+data[&#39;score&#39;].iloc[2] = clf.predict(pd.DataFrame(data[[&#39;age&#39;]].iloc[2]))
 </code></pre>
-<p>得到的结果是：</p>
-<pre><code class="python">(tensor([[1.0561e-38, 1.0102e-38, 9.6429e-39],
-         [8.4490e-39, 9.6429e-39, 9.1837e-39]]),
- tensor([2., 3., 4., 5.]))
+<p><img src="https://img-blog.csdnimg.cn/b1f90b5bb09f4377923a82897f8dac21.png" alt="在这里插入图片描述"></p>
+<ul>
+<li>字符类型数据填充代码示例（决策树）：</li>
+</ul>
+<pre><code class="python">from sklearn.tree import DecisionTreeClassifier
+
+# 获取数据
+data_train = data.iloc[[0, 1, 3]]
+
+data_train_x = data_train[[&#39;age&#39;]]
+data_train_y = data_train[&#39;class&#39;]
+# 使用决策树进行拟合
+clf = DecisionTreeClassifier()
+clf.fit(data_train_x, data_train_y)
+# 使用分类结果进行填充
+data[&#39;class&#39;].iloc[4] = clf.predict(pd.DataFrame(data[[&#39;age&#39;]].iloc[4]))[0]
 </code></pre>
-<h2 id="torch-IntTensor"><a href="#torch-IntTensor" class="headerlink" title="torch.IntTensor"></a>torch.IntTensor</h2><p>torch.IntTensor用于生成数据类型为整型的Tensor,传递给传递给torch.IntTensor的参数可以是列表，也可以是一个维度值。</p>
-<pre><code>import torch
-a = torch.FloatTensor(2,3)
-b = torch.FloatTensor([2,3,4,5])
-a,b
-</code></pre>
-<pre><code>import torch
-a = torch.rand(2,3)
-a 
-</code></pre>
-<p>得到：</p>
-<pre><code>tensor([[0.5625, 0.5815, 0.8221],
-        [0.3589, 0.4180, 0.2158]])
-</code></pre>
-<h2 id="torch-randn"><a href="#torch-randn" class="headerlink" title="torch.randn"></a>torch.randn</h2><p>用于生成数据类型为浮点数且维度指定的随机Tensor，和在numpy中使用的numpy.randn生成的随机数的方法类似，随机生成的浮点数的取值满足均值为0，方差为1的正态分布。</p>
-<pre><code>import torch
-a = torch.randn(2,3)
-a 
-</code></pre>
-<p>得到：</p>
-<pre><code>tensor([[-0.0067, -0.0707, -0.6682],
-        [ 0.8141,  1.1436,  0.5963]])
-</code></pre>
-<h2 id="torch-range"><a href="#torch-range" class="headerlink" title="torch.range"></a>torch.range</h2><p>torch.range用于生成数据类型为浮点型且起始范围和结束范围的Tensor，所以传递给torch.range的参数有三个，分别为起始值，结束值，步长，其中步长用于指定从起始值到结束值得每步的数据间隔。</p>
-<p>import torch<br>a &#x3D; torch.range(1,20,2)<br>a<br>1<br>2<br>3<br>得到：</p>
-<pre><code>tensor([ 1.,  3.,  5.,  7.,  9., 11., 13., 15., 17., 19.])
-</code></pre>
-<h2 id="torch-zeros-x2F-ones-x2F-empty"><a href="#torch-zeros-x2F-ones-x2F-empty" class="headerlink" title="torch.zeros&#x2F;ones&#x2F;empty"></a>torch.zeros&#x2F;ones&#x2F;empty</h2><p>torch.zeros用于生成数据类型为浮点型且维度指定的Tensor，不过这个浮点型的Tensor中的元素值全部为0。</p>
-<p>torch.ones生成全1的数组。</p>
-<p>torch.empty创建一个未被初始化数值的tensor,tensor的大小是由size确定,size: 定义tensor的shape ，这里可以是一个list 也可以是一个tuple</p>
-<pre><code>import torch
-a = torch.zeros(2,3)
-a
-</code></pre>
-<p>得到：</p>
-<pre><code>tensor([[0., 0., 0.],
-        [0., 0., 0.]])
-</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/1d621ff3531d4768beb8c618ecb7591f.png" alt="在这里插入图片描述"></p>
 
     </div>
     

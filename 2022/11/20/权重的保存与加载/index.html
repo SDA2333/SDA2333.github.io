@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
-        <title>Tags: Anaconda | SDA的网站</title>
+        <title>权重的保存与加载 | SDA的网站</title>
         <meta name="author" content="SDA">
         <meta name="description" content="">
         <meta name="keywords" content="">
@@ -148,219 +148,98 @@
 </nav>
                     </div>
                     <div id="main">
-                         
-<div class="categories-tags">
+                        
+<div class="article">
+    <div>
+        <h1>权重的保存与加载 </h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <svg class="fa-icon"><use xlink:href="#calendar-solid"></use></svg>
+            </span>
+            2022/11/20
+        </span>
+        
+        <span class="category">
+            <a href="/categories/deep-learning/">
+                <span class="icon">
+                    <svg class="fa-icon"><use xlink:href="#bookmark-solid"></use></svg>
+                </span>
+                deep learning
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/权重保存/" style="color: #ffa2c4">
+                    权重保存
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    <div class="content" v-pre>
+        <h1 id="权重的保存与加载"><a href="#权重的保存与加载" class="headerlink" title="权重的保存与加载"></a>权重的保存与加载</h1><span id="more"></span>
+<p><strong>(1) 保存和加载整个模型</strong></p>
+<pre><code class="ruby"># 模型保存
+torch.save(model, &#39;model.pkl&#39;)
+# 模型加载
+model = torch.load(&#39;model.pkl&#39;)
+</code></pre>
+<p>这种方式无需自定义网络，保存时已把网络结构保存，比较死板，不能调整网络结构。</p>
+<p><strong>(2) 仅仅保存模型参数以及分别加载模型结构和参数</strong></p>
+<pre><code class="ruby"># 模型参数保存
+torch.save(model.state_dict(), &#39;model_param.pkl&#39;)
+# 模型参数加载
+model = ModelClass(...)
+model.load_state_dict(torch.load(&#39;model_param.pkl&#39;))
+</code></pre>
+<p>这种方式需要自己定义网络，并且其中的参数名称与结构要与保存的模型中的一致（可以是部分网络，比如只使用VGG的前几层），相对灵活，便于对网络进行修改。</p>
+<p>说明：</p>
+<p>1.<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=torch&spm=1001.2101.3001.7020">torch</a>.load加载模型参数</p>
+<p>2.<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=model&spm=1001.2101.3001.7020">model</a>.load_state_dict加载模型参数到模型结构</p>
+<h2 id="CPU模型加载GPU参数"><a href="#CPU模型加载GPU参数" class="headerlink" title="CPU模型加载GPU参数"></a>CPU模型加载GPU参数</h2><pre><code class="lua">model.load_state_dict(torch.load(&#39;model_param.pkl&#39;, map_location=&#39;cpu&#39;))
+</code></pre>
+<h2 id="通过DataParalle使用多GPU"><a href="#通过DataParalle使用多GPU" class="headerlink" title="通过DataParalle使用多GPU"></a>通过DataParalle使用多GPU</h2><pre><code class="ruby">model=DataParalle(model)
+#保存参数
+torch.save(model.module.state_dict(), &#39;model_param.pkl&#39;)
+</code></pre>
+<p><strong>(3) <code>**pytorch加载预训练模型**</code></strong>**</p>
+<h2 id="加载预训练模型和参数"><a href="#加载预训练模型和参数" class="headerlink" title="**加载预训练模型和参数**"></a>**<code>加载预训练模型和参数**</code></h2><pre><code class="sql">resnet18 = models.resnet(pretrained=True)
+</code></pre>
+<h2 id="只加载模型，不加载预训练参数"><a href="#只加载模型，不加载预训练参数" class="headerlink" title="只加载模型，不加载预训练参数"></a><code>只加载模型，不加载预训练参数</code></h2><pre><code class="python"># 加载模型
+resnet18 = models.resnet18(pretrained=False)
+# 加载预先下载好的预训练模型参数
+resnet18.load_state_dict(torch.load(&#39;resnet18-5c106cde.pth&#39;))
+</code></pre>
+<h2 id="加载部分预训练模型"><a href="#加载部分预训练模型" class="headerlink" title="加载部分预训练模型"></a><code>加载部分预训练模型</code></h2><pre><code class="python">resnet152 = models.resnet152(pretrained=True)
+pretrained_dict = resnet152.state_dict()
+&quot;&quot;&quot;加载torchvision中的预训练模型和参数后通过state_dict()方法提取参数   也可以直接从官方model_zoo下载：   pretrained_dict = model_zoo.load_url(model_urls[&#39;resnet152&#39;])&quot;&quot;&quot;
+model_dict = model.state_dict()
+# 将pretrained_dict里不属于model_dict的键剔除掉
+pretrained_dict = &#123;k: v for k, v in pretrained_dict.items() if k in model_dict&#125;
+# 更新现有的model_dict
+model_dict.update(pretrained_dict)
+# 加载我们真正需要的state_dict
+model.load_state_dict(model_dict)
+</code></pre>
+
+    </div>
     
-    <div class="all-s">
-        
-        
-        <span>
-            <a href="/tags/跨域/" style="background: #00a596">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                跨域
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/Anaconda/" style="background: linear-gradient(120deg, #9abbf7 0%, #ffbbf4 100%)">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                Anaconda
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/java/" style="background: #03a9f4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                java
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/后端/" style="background: #ffa2c4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                后端
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/hexo/" style="background: #03a9f4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                hexo
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/Pytorch/" style="background: #ff7d73">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                Pytorch
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/杂谈/" style="background: #ffa2c4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                杂谈
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/损失函数/" style="background: #00bcd4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                损失函数
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/卷积/" style="background: #03a9f4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                卷积
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/权重保存/" style="background: #ffa2c4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                权重保存
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/解压/" style="background: #03a9f4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                解压
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/pandas数据预处理/" style="background: #00a596">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                pandas数据预处理
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/线性代数/" style="background: #03a9f4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                线性代数
-            </a>
-        </span>
-        
+    
+    <link rel="stylesheet" href="https://cdn.staticfile.org/waline/2.9.1/waline.min.css" />
+    <div id="comment">
+        <div id="waline-container"></div>
     </div>
-    <div id="archives">
-        
-        <div class="timeline">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2022/10/1</div>
-                <a href="/2022/10/01/Anaconda常见命令合集/">
-                    <h3>Anaconda常见命令合集</h3>
-                </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/deep-learning/">
-                            <span class="icon">
-                                <svg class="fa-icon"><use xlink:href="#bookmark-solid"></use></svg>
-                            </span>
-                            deep learning
-                        </a>
-                    </span>
-                    
-                    
-                    <span class="tags">
-                        <span class="icon">
-                            <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                        </span>
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/Anaconda/" style="color: #ffa2c4">
-                                Anaconda
-                            </a>
-                        </span>
-                        
-                    </span>
-                    
-                </div>
-            </div>
-        </div>
-        
-        <div class="timeline">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2022/10/1</div>
-                <a href="/2022/10/01/如何重装anaconda/">
-                    <h3>如何重装Anaconda</h3>
-                </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/deep-learning/">
-                            <span class="icon">
-                                <svg class="fa-icon"><use xlink:href="#bookmark-solid"></use></svg>
-                            </span>
-                            deep learning
-                        </a>
-                    </span>
-                    
-                    
-                    <span class="tags">
-                        <span class="icon">
-                            <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                        </span>
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/Anaconda/" style="color: #00a596">
-                                Anaconda
-                            </a>
-                        </span>
-                        
-                    </span>
-                    
-                </div>
-            </div>
-        </div>
-        
-    </div>
+    
 </div>
                          
 <footer id="footer">
@@ -389,6 +268,24 @@
         <script src="/js/particlex.js"></script>
         <script src="/js/showimg.js"></script>
         
+
+<script src="https://cdn.staticfile.org/waline/2.9.1/waline.min.js"></script>
+<script>
+    Waline.init({
+        el: '#waline-container',
+        serverURL: "https://blog-mac-comment.vercel.app",
+        commentCount: true,
+        pageview: false,
+        emoji: "https://unpkg.com/@waline/emojis@1.0.1/weibo,https://unpkg.com/@waline/emojis@1.0.1/alus,https://unpkg.com/@waline/emojis@1.0.1/bilibili,https://unpkg.com/@waline/emojis@1.0.1/qq,https://unpkg.com/@waline/emojis@1.0.1/tieba,https://unpkg.com/@waline/emojis@1.0.1/tw-emoji".split(','),
+        meta: "nick,mail,link".split(','),
+        requiredMeta: "nick".split(','),
+        lang: "zh-CN",
+        wordLimit: parseInt("0"),
+        pageSize: "10",
+        login: "enable",
+        locale: {}
+    });
+</script>
 
     </body>
 </html>

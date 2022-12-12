@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
-        <title>Tags: Anaconda | SDA的网站</title>
+        <title>对于卷积的理解 | SDA的网站</title>
         <meta name="author" content="SDA">
         <meta name="description" content="">
         <meta name="keywords" content="">
@@ -148,219 +148,62 @@
 </nav>
                     </div>
                     <div id="main">
-                         
-<div class="categories-tags">
+                        
+<div class="article">
+    <div>
+        <h1>对于卷积的理解 </h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <svg class="fa-icon"><use xlink:href="#calendar-solid"></use></svg>
+            </span>
+            2022/12/4
+        </span>
+        
+        <span class="category">
+            <a href="/categories/deep-learning/">
+                <span class="icon">
+                    <svg class="fa-icon"><use xlink:href="#bookmark-solid"></use></svg>
+                </span>
+                deep learning
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/卷积/" style="color: #00a596">
+                    卷积
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    <div class="content" v-pre>
+        <h1 id="对于卷积的理解"><a href="#对于卷积的理解" class="headerlink" title="对于卷积的理解"></a>对于卷积的理解</h1><span id="more"></span>
+<h4 id="为什么卷积参数，相比全连接这么少却可以奏效"><a href="#为什么卷积参数，相比全连接这么少却可以奏效" class="headerlink" title="为什么卷积参数，相比全连接这么少却可以奏效"></a>为什么卷积参数，相比全连接这么少却可以奏效</h4><p>一句话：利用了其图像有效特征的局部性，平移不变性。下面我会举例子的方式对其具体的过程进行剖析：</p>
+<h4 id="对于全连接"><a href="#对于全连接" class="headerlink" title="对于全连接"></a>对于全连接</h4><p>w<em>x（上一层的几千个）&#x3D;x（下一层的一个节点），有多少个w就有多少个下一层节点，最后希望汇总得到的节点无限逼近于 0 0 1。以此反向传播不断调节参数。这个我们很容易理解，相当于一个方程，等式右边的结果给你了，未知数x的值也都给你了，就一直通过梯度反向传播求每一个x的参数w。这很容易理解。</em></p>
+<h4 id="对于卷积"><a href="#对于卷积" class="headerlink" title="对于卷积"></a>对于卷积</h4><p><em>w（不断复用的几个）</em> x（含有空间信息的几千个）&#x3D;x（下一层）,最后我们依然希望可以汇总得到独热编码 0 0 1。仍然可以套用方程式的理解，给定等式右边，以及x，求w。</p>
+<p>但是我们不难看出，w只有几个，怎么做才能那么精巧的训练出刚好使得等式右边为 0 0 1呢。我们不难想象，在训练过程中，w与含有空间信息的x进行卷积操作（即交叉相乘），我们最终一定可以训练出一个w。对于，对图像类别起决定性作用的图像的像素位置区域，进行交叉相乘时，会更加敏感，能将其数值保留下来，保留到下一层。影响最后的结果 0 0 1。对于无关信息的图像像素，进行交叉相乘后，留给下一层的东西，很小，很少，几乎不会影响最后的结果 0 0 1。这也就解释了，所谓特征提取，特征融合，到底是在做什么。为什么卷积，可以奏效。</p>
+<p>将卷积神经网络的训练进行可视化，也可以证实我的上述想法。</p>
+<h4 id="对于通道"><a href="#对于通道" class="headerlink" title="对于通道"></a>对于通道</h4><p>每一个通道，会学到不完全一样的特征。在（64通道）往下一层（128通道，64通道，10通道等等任意通道）的时候，又必然会进行一次64通道的特征融合，加上不同方式（128种，64种，10种等任意种）的特征提取。（每一个通道都是一种特征提取方式）</p>
+<p>于是，我们每一层都在做特征提取，特征融合，期望我们通过训练卷积核（即w）提取到的特征x，能够影响到最后的 0 0 1的生成。如果不利于，则会调整参数改变特征提取方式，利于，也会调整参数改善特征提取方式。</p>
+
+    </div>
     
-    <div class="all-s">
-        
-        
-        <span>
-            <a href="/tags/跨域/" style="background: #00a596">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                跨域
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/Anaconda/" style="background: linear-gradient(120deg, #9abbf7 0%, #ffbbf4 100%)">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                Anaconda
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/java/" style="background: #03a9f4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                java
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/后端/" style="background: #ffa2c4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                后端
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/hexo/" style="background: #03a9f4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                hexo
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/Pytorch/" style="background: #ff7d73">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                Pytorch
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/杂谈/" style="background: #ffa2c4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                杂谈
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/损失函数/" style="background: #00bcd4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                损失函数
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/卷积/" style="background: #03a9f4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                卷积
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/权重保存/" style="background: #ffa2c4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                权重保存
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/解压/" style="background: #03a9f4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                解压
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/pandas数据预处理/" style="background: #00a596">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                pandas数据预处理
-            </a>
-        </span>
-        
-        
-        <span>
-            <a href="/tags/线性代数/" style="background: #03a9f4">
-                <span class="icon">
-                    <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                </span>
-                线性代数
-            </a>
-        </span>
-        
+    
+    <link rel="stylesheet" href="https://cdn.staticfile.org/waline/2.9.1/waline.min.css" />
+    <div id="comment">
+        <div id="waline-container"></div>
     </div>
-    <div id="archives">
-        
-        <div class="timeline">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2022/10/1</div>
-                <a href="/2022/10/01/Anaconda常见命令合集/">
-                    <h3>Anaconda常见命令合集</h3>
-                </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/deep-learning/">
-                            <span class="icon">
-                                <svg class="fa-icon"><use xlink:href="#bookmark-solid"></use></svg>
-                            </span>
-                            deep learning
-                        </a>
-                    </span>
-                    
-                    
-                    <span class="tags">
-                        <span class="icon">
-                            <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                        </span>
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/Anaconda/" style="color: #ffa2c4">
-                                Anaconda
-                            </a>
-                        </span>
-                        
-                    </span>
-                    
-                </div>
-            </div>
-        </div>
-        
-        <div class="timeline">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2022/10/1</div>
-                <a href="/2022/10/01/如何重装anaconda/">
-                    <h3>如何重装Anaconda</h3>
-                </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/deep-learning/">
-                            <span class="icon">
-                                <svg class="fa-icon"><use xlink:href="#bookmark-solid"></use></svg>
-                            </span>
-                            deep learning
-                        </a>
-                    </span>
-                    
-                    
-                    <span class="tags">
-                        <span class="icon">
-                            <svg class="fa-icon"><use xlink:href="#tags-solid"></use></svg>
-                        </span>
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/Anaconda/" style="color: #00a596">
-                                Anaconda
-                            </a>
-                        </span>
-                        
-                    </span>
-                    
-                </div>
-            </div>
-        </div>
-        
-    </div>
+    
 </div>
                          
 <footer id="footer">
@@ -389,6 +232,24 @@
         <script src="/js/particlex.js"></script>
         <script src="/js/showimg.js"></script>
         
+
+<script src="https://cdn.staticfile.org/waline/2.9.1/waline.min.js"></script>
+<script>
+    Waline.init({
+        el: '#waline-container',
+        serverURL: "https://blog-mac-comment.vercel.app",
+        commentCount: true,
+        pageview: false,
+        emoji: "https://unpkg.com/@waline/emojis@1.0.1/weibo,https://unpkg.com/@waline/emojis@1.0.1/alus,https://unpkg.com/@waline/emojis@1.0.1/bilibili,https://unpkg.com/@waline/emojis@1.0.1/qq,https://unpkg.com/@waline/emojis@1.0.1/tieba,https://unpkg.com/@waline/emojis@1.0.1/tw-emoji".split(','),
+        meta: "nick,mail,link".split(','),
+        requiredMeta: "nick".split(','),
+        lang: "zh-CN",
+        wordLimit: parseInt("0"),
+        pageSize: "10",
+        login: "enable",
+        locale: {}
+    });
+</script>
 
     </body>
 </html>
